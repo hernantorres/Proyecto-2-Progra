@@ -22,7 +22,7 @@ public class MainWindow extends JFrame
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       this.displayImage();
-      //this.displayTextField();
+      this.displayTextField();
    }
 
    /**
@@ -52,14 +52,9 @@ public class MainWindow extends JFrame
     */
    private void displayTextField()
    {
-	   JTextField textField = new JTextField(textLength);
-	   
-	   JPanel jp = new JPanel();
-	   JLabel jl = new JLabel();
-	   
-	   jp.add(textField);
-	   this.add(jp);
-	   
+      JTextField textField = new JTextField();
+      textField.setHorizontalAlignment(JTextField.TRAILING);
+      this.add(textField);
    }
  
 }
