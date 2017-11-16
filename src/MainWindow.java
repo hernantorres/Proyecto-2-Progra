@@ -1,6 +1,7 @@
 import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
 
  
 /**
@@ -17,7 +18,7 @@ public class MainWindow extends JFrame
       this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
       this.displayImage();
-      //this.displayTextField();
+      this.displayTextField();
    }
 
    /**
@@ -39,6 +40,13 @@ public class MainWindow extends JFrame
 
       // Añade el Label al Frame
       this.add(character);
+   }
+
+   private void displayTextField()
+   {
+      JTextField textField = new JTextField();
+      textField.setHorizontalAlignment(JTextField.TRAILING);
+      this.add(textField);
    }
  
 }
