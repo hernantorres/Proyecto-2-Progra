@@ -3,6 +3,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import java.awt.Font;
  
 /**
  * Class that creates the main wondow for the game. Extends JFrame.
@@ -14,47 +17,52 @@ public class MainWindow extends JFrame
 	private int textLength = 30;
 	private int windowWidth = 640;
 	private int windowLength = 480;
-	
+
 	public MainWindow()
 	{
-		super("Guess The Character");
-      this.setSize(windowWidth, windowLength);
-      this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	super("Guess The Character");
+	this.setSize(windowWidth, windowLength);
+	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-      this.displayImage();
-      this.displayTextField();
+
+	BorderLayout mainLayout = new BorderLayout();
+	this.setLayout(mainLayout);
+
+	this.displayElements();
    }
 
    /**
     * 
     *
     */
-   private void displayImage()
+   private void displayElements()
    {
-      ImageIcon image = new ImageIcon("../images/Spiderman.png");
+		ImageIcon image = new ImageIcon("../images/imgSpiderman.png");
+		JLabel character = new JLabel(image, JLabel.CENTER);
 
-      JLabel character = new JLabel("Adivina el personaje:", image, JLabel.CENTER);
+		JPanel levelIndicator = new JPanel();
+		levelIndicator.setLayout(new BorderLayout());
+		JLabel level = new JLabel("LEVEL 1");
+		Font font = new Font("Sans", Font.ITALIC, 20);
+		level.setFont( font );
+		level.setHorizontalAlignment(JLabel.CENTER);
+		levelIndicator.add(level);
 
-      // Coloca el Label arriba
-      character.setVerticalAlignment(JLabel.TOP);
+		JTextField text = new JTextField(10);
+		text.setHorizontalAlignment(JTextField.CENTER);
 
-      // Coloca el texto encima de la imagen
-      character.setVerticalTextPosition(JLabel.TOP);
-      character.setHorizontalTextPosition(JLabel.CENTER);
 
-      // Añade el Label al Frame
-      this.add(character);
+
+
+
+
+
+		// Añade los elementos al Frame
+		this.add(character, BorderLayout.CENTER);
+		this.add(level, BorderLayout.NORTH);
+		this.add(text, BorderLayout.SOUTH);
+
    }
    
-   /**
-    * 
-    *
-    */
-   private void displayTextField()
-   {
-      JTextField textField = new JTextField();
-      textField.setHorizontalAlignment(JTextField.TRAILING);
-      this.add(textField);
-   }
  
 }
