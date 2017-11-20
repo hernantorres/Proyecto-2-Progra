@@ -16,7 +16,7 @@ La historia toma lugar en un mundo parecido al presente, excepto por un artefact
 ![FSM](FSM.jpg)
 
 **La maquina de escribir de la muerte (o Finite Sentence Machine(FSM) en inglés)** es capaz de destruir a cualquier persona con solo saber su nombre y tener su rostro en cuenta mientras escribe el nombre de su víctima. 
-El protagonista podría usar esta arma para matar a figuras políticas, grandes empresarios, y hasta a la suegra. 
+El protagonista podría usar esta arma para matar a celebridades, figuras políticas, grandes empresarios, y hasta a la suegra. 
 Podría gobernar al mundo a punta de miedo. 
 Pero nuestro héroe, que reconoce su poder, la guarda para que no se utilize para el mal.
 
@@ -26,14 +26,21 @@ Como Costa Rica es un país de paz donde conseguir armas es muy difícil debido 
 ## Estética ##
 
 El GUI tendrá una ventanilla con un dibujo(dimensiones 600x600) del enemigo, apuntando directo al jugador listo para disparar. 
-Abajo hay otra ventana donde el jugador puede escribir el nombre de su contrincante, antes de que él o ella pueda dispararlo. 
+Abajo hay otra ventana donde el jugador puede escribir el nombre de su contrincante, antes de que él o ella pueda dispararle.
 
-A los costados, el cronómetro en cuenta regresiva y los turnos que ha sobrevivido el jugador.
-Las imagenes estarán confinadas en un cuadrado, todas del mismo tamaño. Los dibujos serán hechos por nosotros, ya que todos deben tener una cara amenazadora y un arma en la mano.
+Justo abajo de la imagen, el cronómetro en cuenta regresiva. Si el cronómetro llega a cero, el enemigo dispara. 
+
+Al costado, los turnos que ha sobrevivido el jugador.
+
+
+Las imagenes estarán confinadas en un cuadrado, todas del mismo tamaño. 
+Los dibujos serán caricaturescos y exagerados para denotar las características principales de los enemigos. 
+De este modo serán más fáciles de reconocer. 
+Los dibujos serán hechos por nosotros, ya que todos deben tener una cara amenazadora y un arma en la mano.
 
 ## Tecnología ##
 
-La tecnología del juego es el espacio real en el que lo jugamos. En este caso, será el GUI de java en una computadora. 
+La tecnología es el espacio real en el que tenemos la experiencia de juego. En este caso, será el GUI de java en una computadora. 
 
 ## Mecánicas ##
 
@@ -41,8 +48,9 @@ La tecnología del juego es el espacio real en el que lo jugamos. En este caso, 
 2. El juego pone a aprueba los conocimientos de cultura general, reconocimiento de imagenes y velocidad del jugador. 
 3. El juego cuenta con un cronómetro en cuenta regresiva que se reinicia cada vez que la imagen cambie.
 ![temporizador](temporizador.gif)
-4. Si el cronómetro se acaba antes de que el jugador complete la palabra, en lugar de perder/morir inmediatamente, el juego "lanza un dado".
-	* Es un chance (60%) de que el personaje en la pantalla "falle el tiro", o que logre dispararle al jugador, matándolo y así terminando el juego.
+4. Si el cronómetro se acaba antes de que el jugador complete la palabra, el enemigo dispara. En lugar de perder/morir inmediatamente, dos cosas pueden suceder:
+	* El enemigo en la pantalla "falla el tiro" y el juego sigue al próximo turno.
+	* El enemigo logra dispararle al jugador, matándolo y así terminando el juego.
 
 *Los personajes son principalmente de películas y series de TV.*
 
