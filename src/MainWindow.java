@@ -96,6 +96,12 @@ public class MainWindow extends JFrame
 	{
 		ImageIcon image = new ImageIcon("../assets/images/imgSpiderman.png");
 		JLabel character = new JLabel(image);
+		JPanel center = new JPanel();
+		center.setLayout(new BorderLayout());
+		JLabel cronometro = new JLabel("Aqui va el reloj", JLabel.CENTER);
+		center.add(character, BorderLayout.CENTER);
+		center.add(cronometro, BorderLayout.SOUTH);
+		
 
 		JPanel levelIndicator = new JPanel();
 		levelIndicator.setLayout(new BorderLayout());
@@ -115,7 +121,7 @@ public class MainWindow extends JFrame
 
 
 		// Añade los elementos al Frame
-		this.add(character, BorderLayout.CENTER);
+		this.add(center, BorderLayout.CENTER);
 		this.add(level, BorderLayout.NORTH);
 		this.add(text, BorderLayout.SOUTH);
 
