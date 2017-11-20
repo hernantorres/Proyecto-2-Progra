@@ -36,18 +36,21 @@ public class MainWindow extends JFrame
 		this.setSize(windowWidth, windowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-//		BorderLayout mainLayout = new BorderLayout();
-//	    this.setLayout( mainLayout );
-		this.displayImageView();
+		BorderLayout mainLayout = new BorderLayout();
+	    this.setLayout( mainLayout );
+//		this.displayImageView();
 //		this.displayTimerView();
-		this.displayTextFieldView();
+//		this.displayTextFieldView();
 //		this.displayCurrentLevelView();
+		this.displayElements();
 	}
+	
+ 
 
 	/**
 	* 
 	*/
-	private void displayImageView()
+	/*private void displayImageView()
 	{
 
 		System.out.printf("monitor height = %.2f %n", monitorHeight);
@@ -68,7 +71,7 @@ public class MainWindow extends JFrame
 
 		// Añade el Label al Frame
 		this.add(character);
-	}
+	}*/
    
 	/**
 	* 
@@ -79,34 +82,20 @@ public class MainWindow extends JFrame
 		JTextField textField = new JTextField();
 		textField.setHorizontalAlignment(JTextField.TRAILING);
 		this.add(textField);
-		}
+		
 	}
 
-	private int textLength = 30;
-	private int windowWidth = 640;
-	private int windowLength = 480;
-
-	public MainWindow()
-	{
-	super("Guess The Character");
-	this.setSize(windowWidth, windowLength);
-	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-	BorderLayout mainLayout = new BorderLayout();
-	this.setLayout(mainLayout);
-
-	this.displayElements();
-   }
 
    /**
     * 
     *
     */
-   private void displayElements()
-   {
-		ImageIcon image = new ImageIcon("../images/imgSpiderman.png");
-		JLabel character = new JLabel(image, JLabel.CENTER);
+	private void displayElements()
+	{
+		ImageIcon image = new ImageIcon("../assets/images/imgSpiderman.png");
+		JLabel character = new JLabel(image);
 
 		JPanel levelIndicator = new JPanel();
 		levelIndicator.setLayout(new BorderLayout());
@@ -130,7 +119,5 @@ public class MainWindow extends JFrame
 		this.add(level, BorderLayout.NORTH);
 		this.add(text, BorderLayout.SOUTH);
 
-   }
-   
- 
+	}
 }
