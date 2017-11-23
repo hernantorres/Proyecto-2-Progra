@@ -8,8 +8,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.Scanner;
 import java.awt.BorderLayout;
+import java.awt.Container;
+
 import javax.swing.JPanel;
 import java.awt.Font;
+import java.awt.Insets;
 /**
  * Class that creates the main wondow for the game. Extends JFrame.
  * This object displays the image and text field where the game takes place.
@@ -17,8 +20,10 @@ import java.awt.Font;
 public class MainWindow extends JFrame
 {
 	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets( getGraphicsConfiguration() );
+	int taskBarSize = scnMax.bottom;
 	double monitorWidth = screenSize.getWidth();
-	double monitorHeight = screenSize.getHeight();
+	double monitorHeight = screenSize.getHeight() - (double)taskBarSize;
 	
 	private static int desiredHeightRatio = 20;
 	private static int desiredWidthRatio = 15;
@@ -35,14 +40,13 @@ public class MainWindow extends JFrame
 		super( gameName );
 		this.setSize(windowWidth, windowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
 
-		BorderLayout mainLayout = new BorderLayout();
-	    this.setLayout( mainLayout );
-//		this.displayImageView();
-//		this.displayTimerView();
-//		this.displayTextFieldView();
-//		this.displayCurrentLevelView();
-		this.displayElements();
+		Container contentPane = getContentPane();
+	    contentPane.setLayout( new GridLayout(2, 1) );
+	    
+	    contentPane.add( new EnemyGrid() );
+	    contentPane.add( new TypewriterGrid() );
 	}
 	
  
