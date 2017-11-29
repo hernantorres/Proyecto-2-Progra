@@ -5,9 +5,14 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import java.util.Scanner;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 /**
@@ -16,17 +21,17 @@ import java.awt.image.BufferedImage;
  */
 public class MainWindow extends JFrame
 {
-	/*Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets( getGraphicsConfiguration() );
 	int taskBarSize = scnMax.bottom;
 	double monitorWidth = screenSize.getWidth();
 	double monitorHeight = screenSize.getHeight() - (double)taskBarSize;
 	
-	private static int desiredHeightRatio = 20;
-	private static int desiredWidthRatio = 15;
+	private static int desiredHeightRatio = 1;
+	private static int desiredWidthRatio = 1;
 	
 	private int windowHeight = (int)Math.floor( monitorHeight / desiredHeightRatio ) * desiredHeightRatio;
-	private int windowWidth = ( windowHeight * desiredWidthRatio ) / desiredHeightRatio;*/
+	private int windowWidth = ( windowHeight * desiredWidthRatio ) / desiredHeightRatio;
 	
 	private static int textLength = 30;
 	private static String gameName = "Finite Sentence Machine";
@@ -35,12 +40,10 @@ public class MainWindow extends JFrame
 	public MainWindow()
 	{
 		super( gameName );
-		this.setSize(600, 600);
+		this.setSize(windowWidth, windowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
+		this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
 		BorderLayout mainLayout = new BorderLayout();
-		//mainLayout.setHgap(100);
-		//mainLayout.setVgap(100);
 		this.setLayout(mainLayout);
 		displayElements();
 	}
