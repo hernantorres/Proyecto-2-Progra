@@ -36,7 +36,7 @@ public class MainWindow extends JFrame
 		this.setSize(600, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
-		GridLayout mainLayout = new GridLayout(3, 1);
+		GridLayout mainLayout = new GridLayout(4, 1);
 		//mainLayout.setHgap(100);
 		//mainLayout.setVgap(100);
 		this.setLayout(mainLayout);
@@ -78,20 +78,20 @@ public class MainWindow extends JFrame
 	{
 		ImageIcon image = new ImageIcon("../assets/images/imgSpiderman.png");
 		JLabel character = new JLabel(image);
-		JPanel center = new JPanel();
-		center.setLayout(new GridLayout(2,1));
+		// JPanel center = new JPanel();
+		// center.setLayout(new GridLayout(2,1));
 		JLabel cronometro = new JLabel("00:01", JLabel.CENTER);
-		center.add(character);
-		center.add(cronometro);
+		// center.add(character);
+		// center.add(cronometro);
 		
 
-		JPanel levelIndicator = new JPanel();
-		levelIndicator.setLayout(new BorderLayout());
+		// JPanel levelIndicator = new JPanel();
+		// levelIndicator.setLayout(new BorderLayout());
 		JLabel level = new JLabel("LEVEL 1");
 		Font font = new Font("Sans", Font.ITALIC, 20);
 		level.setFont( font );
 		level.setHorizontalAlignment(JLabel.CENTER);
-		levelIndicator.add(level);
+		// levelIndicator.add(level);
 
 		JTextField text = new JTextField(10);
 		text.setFont(font);
@@ -101,7 +101,8 @@ public class MainWindow extends JFrame
 
 		// Añade los elementos al Frame
 		this.add(level);
-		this.add(center);
+		this.add(character);
+		this.add(cronometro);
 		this.add(entryField);
 
 	}
