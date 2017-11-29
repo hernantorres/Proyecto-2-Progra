@@ -79,10 +79,10 @@ public class MainWindow extends JFrame
 		ImageIcon image = new ImageIcon("../assets/images/imgSpiderman.png");
 		JLabel character = new JLabel(image);
 		JPanel center = new JPanel();
-		center.setLayout(new BorderLayout());
-		JLabel cronometro = new JLabel("Aqui va el reloj", JLabel.CENTER);
-		center.add(character, BorderLayout.CENTER);
-		center.add(cronometro, BorderLayout.SOUTH);
+		center.setLayout(new GridLayout(2,1));
+		JLabel cronometro = new JLabel("00:01", JLabel.CENTER);
+		center.add(character);
+		center.add(cronometro);
 		
 
 		JPanel levelIndicator = new JPanel();
