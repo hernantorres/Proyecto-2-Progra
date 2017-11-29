@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import java.awt.Font;
 import java.awt.GridLayout;
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 /**
  * Class that creates the main wondow for the game. Extends JFrame.
  * This object displays the image and text field where the game takes place.
@@ -76,11 +78,11 @@ public class MainWindow extends JFrame
     */
 	private void displayElements()
 	{
-		ImageIcon image = new ImageIcon("../assets/images/imgSpiderman.png");
-		JLabel character = new JLabel(image);
+		BufferedImage image = ImageIO.read( this.getClass().getResource("../assets/images/louisCK.png"));
+		// JLabel character = new JLabel(image);
+		JLabel cronometro = new JLabel("00:01", JLabel.CENTER);
 		// JPanel center = new JPanel();
 		// center.setLayout(new GridLayout(2,1));
-		JLabel cronometro = new JLabel("00:01", JLabel.CENTER);
 		// center.add(character);
 		// center.add(cronometro);
 		
@@ -101,7 +103,7 @@ public class MainWindow extends JFrame
 
 		// Añade los elementos al Frame
 		this.add(level);
-		this.add(character);
+		this.add(image);
 		this.add(cronometro);
 		this.add(entryField);
 
