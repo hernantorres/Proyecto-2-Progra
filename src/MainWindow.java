@@ -78,9 +78,11 @@ public class MainWindow extends JFrame
     */
 	private void displayElements()
 	{
-		BufferedImage image = ImageIO.read( this.getClass().getResource("../assets/images/louisCK.png"));
+		//BufferedImage image = ImageIO.read( this.getClass().getResource("../assets/images/louisCK.png"));
+		String imagePathName = "../assets/images/louisCK.png";
+		ImagePanel imagePanel = new ImagePanel( imagePathName );
 		// JLabel character = new JLabel(image);
-		JLabel cronometro = new JLabel("00:01", JLabel.CENTER);
+		JLabel timerView = new JLabel("00:01", JLabel.CENTER);
 		// JPanel center = new JPanel();
 		// center.setLayout(new GridLayout(2,1));
 		// center.add(character);
@@ -89,23 +91,23 @@ public class MainWindow extends JFrame
 
 		// JPanel levelIndicator = new JPanel();
 		// levelIndicator.setLayout(new BorderLayout());
-		JLabel level = new JLabel("LEVEL 1");
+		JLabel currentLevelView = new JLabel("LEVEL 1");
 		Font font = new Font("Sans", Font.ITALIC, 20);
-		level.setFont( font );
-		level.setHorizontalAlignment(JLabel.CENTER);
+		currentLevelView.setFont( font );
+		currentLevelView.setHorizontalAlignment(JLabel.CENTER);
 		// levelIndicator.add(level);
 
 		JTextField text = new JTextField(10);
 		text.setFont(font);
-		JPanel entryField = new JPanel();
+		JPanel entryPanel = new JPanel();
 		//texto.setSize(100,100);
-		entryField.add(text);
+		entryPanel.add(text);
 
 		// Añade los elementos al Frame
-		this.add(level);
-		this.add(image);
-		this.add(cronometro);
-		this.add(entryField);
+		this.add(currentLevelView);
+		this.add(imagePanel);
+		this.add(timerView);
+		this.add(entryPanel);
 
 	}
 }
