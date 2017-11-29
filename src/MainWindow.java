@@ -38,7 +38,7 @@ public class MainWindow extends JFrame
 		this.setSize(600, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
-		GridLayout mainLayout = new GridLayout(4, 1);
+		BorderLayout mainLayout = new BorderLayout();
 		//mainLayout.setHgap(100);
 		//mainLayout.setVgap(100);
 		this.setLayout(mainLayout);
@@ -78,15 +78,11 @@ public class MainWindow extends JFrame
     */
 	private void displayElements()
 	{
-		//BufferedImage image = ImageIO.read( this.getClass().getResource("../assets/images/louisCK.png"));
-		String imagePathName = "../assets/images/louisCK.png";
-		ImagePanel imagePanel = new ImagePanel( imagePathName );
-		// JLabel character = new JLabel(image);
+		ImageIcon image = new ImageIcon( "../assets/images/louisCK.png");
+		JLabel imageView = new JLabel(image);
+		// String imagePathName = "../assets/images/louisCK.png";
+		// ImagePanel imagePanel = new ImagePanel( imagePathName );
 		JLabel timerView = new JLabel("00:01", JLabel.CENTER);
-		// JPanel center = new JPanel();
-		// center.setLayout(new GridLayout(2,1));
-		// center.add(character);
-		// center.add(cronometro);
 		
 
 		// JPanel levelIndicator = new JPanel();
@@ -100,14 +96,16 @@ public class MainWindow extends JFrame
 		JTextField text = new JTextField(10);
 		text.setFont(font);
 		JPanel entryPanel = new JPanel();
-		//texto.setSize(100,100);
 		entryPanel.add(text);
+		JPanel southPanel = new JPanel( new GridLayout(2,1));
+		southPanel.add(timerView);
+		southPanel.add(entryPanel);
 
 		// Añade los elementos al Frame
-		this.add(currentLevelView);
-		this.add(imagePanel);
-		this.add(timerView);
-		this.add(entryPanel);
+		this.add(currentLevelView, BorderLayout.NORTH);
+		// this.add(imagePanel);
+		this.add(imageView, BorderLayout.CENTER);
+		this.add(southPanel, BorderLayout.SOUTH);
 
 	}
 }
