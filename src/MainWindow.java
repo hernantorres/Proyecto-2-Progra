@@ -1,25 +1,20 @@
 import javax.swing.JFrame;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.Scanner;
 import java.awt.BorderLayout;
-import java.awt.Container;
-
 import javax.swing.JPanel;
 import java.awt.Font;
-import java.awt.Insets;
+import java.awt.GridLayout;
 /**
  * Class that creates the main wondow for the game. Extends JFrame.
  * This object displays the image and text field where the game takes place.
  */
 public class MainWindow extends JFrame
 {
-	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	/*Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 	Insets scnMax = Toolkit.getDefaultToolkit().getScreenInsets( getGraphicsConfiguration() );
 	int taskBarSize = scnMax.bottom;
 	double monitorWidth = screenSize.getWidth();
@@ -29,7 +24,7 @@ public class MainWindow extends JFrame
 	private static int desiredWidthRatio = 15;
 	
 	private int windowHeight = (int)Math.floor( monitorHeight / desiredHeightRatio ) * desiredHeightRatio;
-	private int windowWidth = ( windowHeight * desiredWidthRatio ) / desiredHeightRatio;
+	private int windowWidth = ( windowHeight * desiredWidthRatio ) / desiredHeightRatio;*/
 	
 	private static int textLength = 30;
 	private static String gameName = "Finite Sentence Machine";
@@ -38,15 +33,14 @@ public class MainWindow extends JFrame
 	public MainWindow()
 	{
 		super( gameName );
-		this.setSize(windowWidth, windowHeight);
+		this.setSize(600, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
-
-		Container contentPane = getContentPane();
-	    contentPane.setLayout( new GridLayout(2, 1) );
-	    
-	    contentPane.add( new EnemyGrid() );
-	    contentPane.add( new TypewriterGrid() );
+		//this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
+		GridLayout mainLayout = new GridLayout(3, 1);
+		//mainLayout.setHgap(100);
+		//mainLayout.setVgap(100);
+		this.setLayout(mainLayout);
+		displayElements();
 	}
 	
  
@@ -76,24 +70,8 @@ public class MainWindow extends JFrame
 		// Añade el Label al Frame
 		this.add(character);
 	}*/
-   
-	/**
-	* 
-	*
-	*/
-	private void displayTextFieldView()
-	{
-		JTextField textField = new JTextField();
-		textField.setHorizontalAlignment(JTextField.TRAILING);
-		this.add(textField);
-		
-	}
 
-
-
-
-   /**
-    * 
+   /** 
     *
     */
 	private void displayElements()
@@ -116,18 +94,15 @@ public class MainWindow extends JFrame
 		levelIndicator.add(level);
 
 		JTextField text = new JTextField(10);
-		text.setHorizontalAlignment(JTextField.CENTER);
-
-
-
-
-
-
+		text.setFont(font);
+		JPanel entryField = new JPanel();
+		//texto.setSize(100,100);
+		entryField.add(text);
 
 		// Añade los elementos al Frame
-		this.add(center, BorderLayout.CENTER);
-		this.add(level, BorderLayout.NORTH);
-		this.add(text, BorderLayout.SOUTH);
+		this.add(level);
+		this.add(center);
+		this.add(entryField);
 
 	}
 }
