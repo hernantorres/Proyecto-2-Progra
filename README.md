@@ -77,4 +77,8 @@ Al final del proyecto, se espera que el juego tenga una apariencia similar a la 
 
 ![demo](demo.png)
 
+### Progreso ###
+
+![screenshot](screenshot.png)
+
 
