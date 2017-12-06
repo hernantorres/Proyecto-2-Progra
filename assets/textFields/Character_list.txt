@@ -1,0 +1,6 @@
+../assets/images/deadpool.png
+DEADPOOL
+../assets/images/forrestGump.png
+FORREST GUMP
+../assets/images/LouisCK.png
+LOUIS CK

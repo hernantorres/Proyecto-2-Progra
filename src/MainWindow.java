@@ -46,7 +46,7 @@ public class MainWindow extends JFrame implements ActionListener
 	public MainWindow()
 	{
 		super( gameName );
-		this.setSize(windowWidth, windowHeight);
+		this.setSize(getWindowWidth(), getWindowHeight());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
 		BorderLayout mainLayout = new BorderLayout();
@@ -54,8 +54,6 @@ public class MainWindow extends JFrame implements ActionListener
 		displayElements();
 		this.elapsedTime = new Timer(1000, this);
    		this.elapsedTime.start();
-
-
 	}
 	
  
