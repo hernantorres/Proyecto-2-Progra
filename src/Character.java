@@ -62,10 +62,10 @@ public class Character {
             //For loop for every character in the game
             for(int index = 0; index < arrayLength; index++)
             {
-            	//Set direction of the picture
-            	String direction = input.nextLine();
-            	images[index] = new ImageIcon( direction );
-                System.out.println("I read direction: " + direction);
+            	//Read paths for the image and create an ImageIcon
+            	String path = input.nextLine();
+            	images[index] = new ImageIcon( path );
+                System.out.println("I read path: " + path);
                 
                 //Read seconds before particular character shoots
                 long second = input.nextLong();
@@ -73,8 +73,8 @@ public class Character {
                 System.out.println("I read second: " + second);
                 input.nextLine();
                 
-                //Assign names based on direction String. The picture contains the name of the character
-                String name = direction.replace("../assets/images/", "");
+                //Assign names based on path String. The picture contains the name of the character
+                String name = path.replace("../assets/images/", "");
                 name = name.replaceAll(".png", "");
                 names[index] = name;
                 System.out.println("I get name: " + name);

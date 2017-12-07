@@ -193,7 +193,7 @@ public class MainWindow extends JFrame implements ActionListener
       // Si es un evento del button
       if ( event.getSource() == this.changeImageButton )
       {
-    	  this.updateLevel()
+    	  this.updateLevel();
       }
    }
 	
