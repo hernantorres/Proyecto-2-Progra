@@ -2,7 +2,7 @@
 * 
 *
 */
-public class FSM
+public class FiniteSentenceMachine
 {
 
 	private MainWindow mainWindow = null;
@@ -12,7 +12,7 @@ public class FSM
 	*/
 	public static void main(String[] args)
 	{
-		FSM guessTheCharacter = new FSM();
+		FiniteSentenceMachine guessTheCharacter = new FiniteSentenceMachine();
 		guessTheCharacter.run();
 	}
 
