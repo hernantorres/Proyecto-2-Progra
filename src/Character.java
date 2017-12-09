@@ -122,7 +122,7 @@ public class Character {
 		// If current level is 0, we are in the menu, therefore, display an instructions to play
 		if(currentLevel == 0)
 		{
-			return("PRESS ENTER TO PLAY");
+			return("USA EL BOTON PARA INICIAR");
 		}
 		else
 		{

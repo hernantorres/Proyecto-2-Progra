@@ -21,12 +21,14 @@ import javax.swing.text.MaskFormatter;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  * Class that creates the main window for the game. Extends JFrame.
  * This object displays the image and text field where the game takes place.
  */
-public class MainWindow extends JFrame implements ActionListener
+public class MainWindow extends JFrame implements ActionListener, KeyListener
 {
 	// <Valores para la ventana>
 	
@@ -86,11 +88,20 @@ public class MainWindow extends JFrame implements ActionListener
    	// El campo de texto
    	private JFormattedTextField text;
    	
-   	// Panel del sur, contiene el temporizador y el camp ode texto
+ // Panel del norte, contiene el nivel y el temporizador
+   	private JPanel northPanel;
+   	
+   	// Panel del sur, contiene el campo de texto y el boton interactivo
    	private JPanel southPanel;
    	
    	//Tamanno del text field
    	private int textFieldSize = 10;
+   	
+   	public enum buttonState{
+   		ME_RINDO, SIGUIENTE, INICIAR
+   	}
+   	
+   	public buttonState state;
    	
 
 	/**
@@ -107,15 +118,15 @@ public class MainWindow extends JFrame implements ActionListener
 		
 		BorderLayout mainLayout = new BorderLayout();
 		this.setLayout(mainLayout);
-		
-		// Hernan que hace esto?
-		random = new Random();
-		
+
+		// Muestra los elementos del frame
 		displayElements();
 		
+		
+		this.state = buttonState.INICIAR;
+		
 		// Inicia el temporizador
-		this.elapsedTime = new Timer(1000, this);
-   		this.elapsedTime.start();
+		this.elapsedTime = new Timer(1000, this);		
 	}
 	
  
@@ -129,7 +140,7 @@ public class MainWindow extends JFrame implements ActionListener
 		MaskFormatter mascara = null;
 		try
 		{
-			mascara = new MaskFormatter("#### #####");
+			mascara = new MaskFormatter("UUUUUUUUU");
 			mascara.setPlaceholderCharacter('_');
 		}
 		catch ( Exception ex)
@@ -149,33 +160,37 @@ public class MainWindow extends JFrame implements ActionListener
 		//Gets the current level name
 		this.currentLevelView = new JLabel( characters.getCurrentLevel() );
 		//sets font
-		Font font = new Font("Sans", Font.ITALIC, 20);
+		Font font = new Font("Courier New", Font.ITALIC, 20);
 		this.currentLevelView.setFont( font );
 		//Aligns to the center
 		this.currentLevelView.setHorizontalAlignment(JLabel.CENTER);
 
-		// El panel del sur (temporizador y campo de texto)
-		
+		// Boton que cambia imagenes
+		this.changeImageButton = new JButton("Iniciar");
+		this.changeImageButton.addActionListener(this);
+				
+		// El panel del sur (campo de texto y boton interactivo)
 		this.text = new JFormattedTextField( mascara );
 		this.text.setFont(font);
+		this.text.addKeyListener(this);
 		this.entryPanel = new JPanel();
 		this.entryPanel.add(text);
-		this.southPanel = new JPanel( new GridLayout(2,1));
+		this.southPanel = new JPanel( new GridLayout(1,2));
+		this.southPanel.add(entryPanel);
+		this.southPanel.add(changeImageButton);
+		
+		// El panel del norte (nivel y temporizador)
+		this.northPanel = new JPanel( new GridLayout(1,2));
 		this.timerView.setHorizontalAlignment(JLabel.CENTER);
 		this.timerView.setFont ( font );
-		this.southPanel.add(timerView);
-		this.southPanel.add(entryPanel);
-		
-		// Boton que cambia imagenes
-		this.changeImageButton = new JButton("Siguiente");
-		this.changeImageButton.addActionListener(this);
+		this.northPanel.add(currentLevelView);
+		this.northPanel.add(timerView);
 		
 
 		// Annade los elementos al Frame
-		this.add(currentLevelView, BorderLayout.NORTH);
+		this.add(northPanel, BorderLayout.NORTH);
 		this.add(imageView, BorderLayout.CENTER);
 		this.add(southPanel, BorderLayout.SOUTH);
-		this.add(changeImageButton, BorderLayout.EAST);
 
 	}
 
@@ -193,7 +208,25 @@ public class MainWindow extends JFrame implements ActionListener
       // Si es un evento del button
       if ( event.getSource() == this.changeImageButton )
       {
-    	  this.updateLevel();
+    	  if (this.state == buttonState.SIGUIENTE)
+    	  {
+    		  this.state = buttonState.INICIAR;
+    		  this.changeImageButton.setText("Iniciar");
+    		  this.imageView.setIcon(null);
+    		  this.timerView.setText(null);
+    	  }   		  
+    	  else if(this.state == buttonState.INICIAR)
+    	  {
+    		  this.updateLevel();
+    		  this.state = buttonState.ME_RINDO;
+    		  this.changeImageButton.setText("Me rindo");
+    	  }
+    	  else
+    	  {
+    		  this.state = buttonState.SIGUIENTE;
+    		  this.changeImageButton.setText("Siguiente");
+    		  this.elapsedTime.stop();
+    	  }
       }
    }
 	
@@ -206,9 +239,10 @@ public class MainWindow extends JFrame implements ActionListener
 	public void updateLevel()
 	{
 		characters.levelGoToNext();
-		this.imageView.setIcon( characters.getImage() );
 		currentLevelView.setText( characters.getCurrentLevel() );
+		this.imageView.setIcon(this.characters.getImage());
 		elapsedSeconds = characters.getSeconds();
+		this.elapsedTime.start();
 	}
  
    private void updateElapsedTime()
@@ -224,8 +258,38 @@ public class MainWindow extends JFrame implements ActionListener
 		{
 			  this.timerView.setText("Se acabó el tiempo");
 			  this.elapsedTime.stop();
+			  this.state = buttonState.SIGUIENTE;
+			  this.changeImageButton.setText("Siguiente");
 		}
 		else
 			this.timerView.setText(text);
 	}
+
+
+	@Override
+	public void keyPressed(KeyEvent keyEvent) {
+		
+		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
+        {
+            System.out.println(this.text.getText());
+        }
+		
+	}
+
+	
+	@Override
+	public void keyReleased(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+	@Override
+	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+
 }
