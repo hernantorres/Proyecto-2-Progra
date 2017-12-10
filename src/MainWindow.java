@@ -16,6 +16,8 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.text.ParseException;
+
 import javax.swing.Timer;
 import javax.swing.text.MaskFormatter;
 
@@ -103,6 +105,8 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	
    	public buttonState state;
    	
+   	MaskFormatter mascara = null;
+   	
 
 	/**
 	 * Constructor. Sets window width and height. 
@@ -137,10 +141,10 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     */
 	private void displayElements()
 	{
-		MaskFormatter mascara = null;
+		this.mascara = null;
 		try
 		{
-			mascara = new MaskFormatter("UUUUUUUUU");
+			mascara = new MaskFormatter("");
 			mascara.setPlaceholderCharacter('_');
 		}
 		catch ( Exception ex)
@@ -164,6 +168,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		this.currentLevelView.setFont( font );
 		//Aligns to the center
 		this.currentLevelView.setHorizontalAlignment(JLabel.CENTER);
+		this.currentLevelView.setText("USA EL BOTON PARA INICIAR");
 
 		// Boton que cambia imagenes
 		this.changeImageButton = new JButton("Iniciar");
@@ -211,15 +216,26 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     	  if (this.state == buttonState.SIGUIENTE)
     	  {
     		  this.state = buttonState.INICIAR;
+    		  try {
+  				this.mascara.setMask(characters.getMask());
+  				} catch (ParseException e) {}
+  			  this.text = new JFormattedTextField(this.mascara);
     		  this.changeImageButton.setText("Iniciar");
     		  this.imageView.setIcon(null);
     		  this.timerView.setText(null);
+    		  characters.levelGoToNext();
+    		  
     	  }   		  
     	  else if(this.state == buttonState.INICIAR)
     	  {
     		  this.updateLevel();
+    		  try {
+    				this.mascara.setMask(characters.getMask());
+    				} catch (ParseException e) {}
+    		  this.elapsedTime.start();
     		  this.state = buttonState.ME_RINDO;
     		  this.changeImageButton.setText("Me rindo");
+
     	  }
     	  else
     	  {
@@ -238,11 +254,11 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void updateLevel()
 	{
-		characters.levelGoToNext();
+
+		
 		currentLevelView.setText( characters.getCurrentLevel() );
 		this.imageView.setIcon(this.characters.getImage());
 		elapsedSeconds = characters.getSeconds();
-		this.elapsedTime.start();
 	}
  
    private void updateElapsedTime()

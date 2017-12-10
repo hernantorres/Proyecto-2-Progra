@@ -23,7 +23,7 @@ public class Character {
 	private long[] seconds;
 	
 	/** First level is level 0, reserved for the menu part of the game (click to play) */
-	private int currentLevel = 0;
+	private int currentLevel = 1;
 	
 	
 	/***
@@ -40,9 +40,9 @@ public class Character {
 	 */
 	private void loadCharacters()
 	{
-		try
+		/*try
 		{
-            File file = new File("../assets/textFields/Character_list.txt");
+            File file = new File("/resources/Character_list.txt");
             // Proyecto-2-Progra\assets\textFields
 
             //Create scanner for the text file
@@ -85,7 +85,27 @@ public class Character {
 		catch (Exception ex)
 		{
             ex.printStackTrace();
-        }
+        }*/
+		images = new ImageIcon[5];
+		images[0] = new ImageIcon(getClass().getResource("/resources/deadpool.png"));
+		images[1] = new ImageIcon(getClass().getResource("/resources/forrest_gump.png"));
+		images[2] = new ImageIcon(getClass().getResource("/resources/jose_figueres.png"));
+		images[3] = new ImageIcon(getClass().getResource("/resources/louis_ck.png"));
+		images[4] = new ImageIcon(getClass().getResource("/resources/oscar_lopez.png"));
+		seconds = new long[5];
+		seconds[0] = 10;
+		seconds[1] = 11;
+		seconds[2] = 12;
+		seconds[3] = 13;
+		seconds[4] = 14;
+		names = new String[5];
+		names[0] = "DEADPOOL";
+		names[1] = "FORREST GUMP";
+		names[2] = "JOSE FIGUERES";
+		names[3] = "LOUIS CK";
+		names[4] = "OSCAR LOPEZ";
+
+		
 	}
 
 
@@ -119,15 +139,7 @@ public class Character {
 	 */
 	public String getCurrentLevel()
 	{
-		// If current level is 0, we are in the menu, therefore, display an instructions to play
-		if(currentLevel == 0)
-		{
-			return("USA EL BOTON PARA INICIAR");
-		}
-		else
-		{
 			return String.format("LEVEL %d", currentLevel);
-		}
 	}
 
 
@@ -139,6 +151,35 @@ public class Character {
 	{
 		// TODO Auto-generated method stub
 		return seconds[currentLevel];
+	}
+	
+	/**
+	 * Get the name of the actual level character
+	 * @return String the name of the character
+	 */
+	public String getName()
+	{
+		// TODO Auto-generated method stub
+		return names[currentLevel];
+	}
+	
+	/**
+	 * Get the mask that JFormattedField uses
+	 * @return String a mask, for example "####-###"
+	 */
+	public String getMask()
+	{
+		String mask = "";
+		String word = this.getName();
+		String[] words = word.split(" ");
+		for (int index = 0; index < words.length; index++)
+		{
+			mask += " ";
+			for (int letter = 0; letter < words[index].length(); letter++)
+				mask += "U";
+		}
+		mask = mask.substring(1);
+		return mask;
 	}
 
 }
