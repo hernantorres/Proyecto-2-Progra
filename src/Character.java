@@ -1,5 +1,6 @@
 import java.util.Scanner;
 import java.io.File;
+import java.net.URL;
 import javax.swing.ImageIcon;
 
 
@@ -22,11 +23,12 @@ public class Character {
 	 */
 	private long[] seconds;
 	
-	/** First level is level 0, reserved for the menu part of the game (click to play) */
-	private int currentLevel = 1;
+	/** 
+	 * The scanner object used to read the txt file
+	 */
+	private Scanner input;
 	
-	
-	/***
+	/**
 	 * Constructor for loading characters
 	 */
 	public Character()            //Rute es igual a algo como ../assets/images/louisCK.png
@@ -40,13 +42,16 @@ public class Character {
 	 */
 	private void loadCharacters()
 	{
-		/*try
+		// Necessary to read the document without errors
+		try
 		{
-            File file = new File("/resources/Character_list.txt");
-            // Proyecto-2-Progra\assets\textFields
+			URL url = this.getClass().getResource("/resources/Character_list.txt");
 
-            //Create scanner for the text file
-            Scanner input = new Scanner(file);
+			try {
+				File file = new File(url.toURI());
+				this.input = new Scanner(file);
+			} catch (Exception ex) {}
+			
             
             //Array length for the amount of characters
             int arrayLength = input.nextInt();
@@ -62,50 +67,24 @@ public class Character {
             //For loop for every character in the game
             for(int index = 0; index < arrayLength; index++)
             {
-            	//Read paths for the image and create an ImageIcon
-            	String path = input.nextLine();
-            	images[index] = new ImageIcon( path );
-                System.out.println("I read path: " + path);
+            	//Read the names and stores name and image route
+            	String name = input.nextLine();
+            	names[index] = name.replaceAll("_", " ");
+            	images[index] = new ImageIcon(this.getClass().getResource("/resources/" + name + ".png"));
                 
                 //Read seconds before particular character shoots
                 long second = input.nextLong();
                 seconds[index] = second;
-                System.out.println("I read second: " + second);
                 input.nextLine();
                 
-                //Assign names based on path String. The picture contains the name of the character
-                String name = path.replace("../assets/images/", "");
-                name = name.replaceAll(".png", "");
-                names[index] = name;
-                System.out.println("I get name: " + name);
             }
             input.close();
         }
 		//Exception handling
 		catch (Exception ex)
 		{
-            ex.printStackTrace();
-        }*/
-		images = new ImageIcon[5];
-		images[0] = new ImageIcon(getClass().getResource("/resources/deadpool.png"));
-		images[1] = new ImageIcon(getClass().getResource("/resources/forrest_gump.png"));
-		images[2] = new ImageIcon(getClass().getResource("/resources/jose_figueres.png"));
-		images[3] = new ImageIcon(getClass().getResource("/resources/louis_ck.png"));
-		images[4] = new ImageIcon(getClass().getResource("/resources/oscar_lopez.png"));
-		seconds = new long[5];
-		seconds[0] = 10;
-		seconds[1] = 11;
-		seconds[2] = 12;
-		seconds[3] = 13;
-		seconds[4] = 14;
-		names = new String[5];
-		names[0] = "DEADPOOL";
-		names[1] = "FORREST GUMP";
-		names[2] = "JOSE FIGUERES";
-		names[3] = "LOUIS CK";
-		names[4] = "OSCAR LOPEZ";
-
-		
+        }
+	
 	}
 
 
@@ -113,71 +92,52 @@ public class Character {
 	 * Get the image of the character of the particular level
 	 * @return imageIcon of the character playing right now
 	 */
-	public ImageIcon getImage()
+	public ImageIcon getImage(int index)
 	{
-		return images[currentLevel];
+		return images[index -1];
 	}
-	
-	public void levelGoToNext()
-	{
-		// TODO Auto-generated method stub
-		currentLevel = (currentLevel + 1) % getAmountOfCharacters();
-		
-	}
-
-	
-	private int getAmountOfCharacters()
-	{
-		// TODO Auto-generated method stub
-		return images.length;
-	}
-
-
-	/**
-	 * Get the string of the number of the particular level
-	 * @return current level name.
-	 */
-	public String getCurrentLevel()
-	{
-			return String.format("LEVEL %d", currentLevel);
-	}
-
 
 	/**
 	 * Get the seconds of the character of the particular level
 	 * @return imageIcon of the character playing right now
 	 */
-	public long getSeconds()
+	public long getSeconds( int index )
 	{
 		// TODO Auto-generated method stub
-		return seconds[currentLevel];
+		return seconds[index -1];
 	}
 	
 	/**
 	 * Get the name of the actual level character
 	 * @return String the name of the character
 	 */
-	public String getName()
+	public String getName(int index)
 	{
 		// TODO Auto-generated method stub
-		return names[currentLevel];
+		return names[index - 1];
 	}
 	
 	/**
 	 * Get the mask that JFormattedField uses
 	 * @return String a mask, for example "####-###"
 	 */
-	public String getMask()
+	public String getMaskFormat(int index)
 	{
+		// The the string to get concatenated chars
 		String mask = "";
-		String word = this.getName();
+		
+		// Get the name to extract the mask
+		String word = this.getName(index);
 		String[] words = word.split(" ");
-		for (int index = 0; index < words.length; index++)
+		
+		for (int indx = 0; indx < words.length; indx++)
 		{
 			mask += " ";
-			for (int letter = 0; letter < words[index].length(); letter++)
-				mask += "U";
+			for (int letter = 0; letter < words[indx].length(); letter++)
+				mask += "U"; // The "U" char represents an UpperCase letter
 		}
+		
+		// Remove the first whitespace
 		mask = mask.substring(1);
 		return mask;
 	}

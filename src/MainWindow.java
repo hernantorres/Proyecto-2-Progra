@@ -4,9 +4,6 @@ import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.util.Random;
-import java.util.Scanner;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JPanel;
@@ -19,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.text.ParseException;
 
 import javax.swing.Timer;
+import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
 
 import java.awt.event.ActionEvent;
@@ -74,15 +72,13 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	private JLabel imageView;
    	
    	// El label del nivel
-   	private JLabel currentLevelView;
+   	private JLabel levelAndScoreView;
    	
    	// El boton para cambiar de imagen (provisional)
    	private JButton changeImageButton;
    	
    	// Array con los personajes (poseen su propia imagen, proximamente su nombre)
    	private Character characters = new Character();
-
-   	private Random random;
    	
    	// El panel donde va el campo de texto
    	private JPanel entryPanel;
@@ -90,22 +86,31 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	// El campo de texto
    	private JFormattedTextField text;
    	
- // Panel del norte, contiene el nivel y el temporizador
+   	// Panel del norte, contiene el nivel y el temporizador
    	private JPanel northPanel;
    	
    	// Panel del sur, contiene el campo de texto y el boton interactivo
    	private JPanel southPanel;
    	
-   	//Tamanno del text field
-   	private int textFieldSize = 10;
+   	// The current level number
+   	private int currentLevel = 1;
    	
+   	// The number of hits of the player
+   	private int score = 0;
+   	
+   	/**
+	 * An enum to recognize the state of the game in order to make actions.
+	 * This is mostly important for the JButton 
+	 */
    	public enum buttonState{
    		ME_RINDO, SIGUIENTE, INICIAR
    	}
    	
+   	// The "current" enum used by the game
    	public buttonState state;
    	
-   	MaskFormatter mascara = null;
+   	// The JFormattedTextField uses this mask to get formatted
+   	MaskFormatter mask = null;
    	
 
 	/**
@@ -141,58 +146,65 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     */
 	private void displayElements()
 	{
-		this.mascara = null;
+		// This is necessary to set mask Formatted, also used on the rest of the code
+		this.mask = null;
 		try
 		{
-			mascara = new MaskFormatter("");
-			mascara.setPlaceholderCharacter('_');
+			mask = new MaskFormatter("");
+			mask.setPlaceholderCharacter('_');
 		}
 		catch ( Exception ex)
 		{
 			//
 		}
 		
-		// La iamgen del centro
-		//Create a label for the imageview
+		
+		// Image management
+		//Create a label for the imageView
 		this.imageView = new JLabel();
 		//Sets alignment of the image to the center so that it doesnt go down to the sides
 		this.imageView.setHorizontalAlignment(JLabel.CENTER);
 		
+		// Time management
 		//New label for the timer view
 		this.timerView = new JLabel();
 		
+		// Level view management
 		//Gets the current level name
-		this.currentLevelView = new JLabel( characters.getCurrentLevel() );
+		this.levelAndScoreView = new JLabel( String.format("LEVEL %d - SCORE %d", currentLevel, score) );
 		//sets font
 		Font font = new Font("Courier New", Font.ITALIC, 20);
-		this.currentLevelView.setFont( font );
+		this.levelAndScoreView.setFont( font );
 		//Aligns to the center
-		this.currentLevelView.setHorizontalAlignment(JLabel.CENTER);
-		this.currentLevelView.setText("USA EL BOTON PARA INICIAR");
+		this.levelAndScoreView.setHorizontalAlignment(JLabel.CENTER);
+		this.levelAndScoreView.setText("USA EL BOTON PARA INICIAR");
 
-		// Boton que cambia imagenes
+		// JButton management
 		this.changeImageButton = new JButton("Iniciar");
 		this.changeImageButton.addActionListener(this);
-				
-		// El panel del sur (campo de texto y boton interactivo)
-		this.text = new JFormattedTextField( mascara );
+		
+		// JFormattedTextField management
+		this.text = new JFormattedTextField();
 		this.text.setFont(font);
 		this.text.addKeyListener(this);
+		// The field goes in to a JPanel
 		this.entryPanel = new JPanel();
 		this.entryPanel.add(text);
+		
+		// The southPanel elements
 		this.southPanel = new JPanel( new GridLayout(1,2));
 		this.southPanel.add(entryPanel);
 		this.southPanel.add(changeImageButton);
 		
-		// El panel del norte (nivel y temporizador)
+		// The northPanel elements
 		this.northPanel = new JPanel( new GridLayout(1,2));
 		this.timerView.setHorizontalAlignment(JLabel.CENTER);
 		this.timerView.setFont ( font );
-		this.northPanel.add(currentLevelView);
+		this.northPanel.add(levelAndScoreView);
 		this.northPanel.add(timerView);
 		
 
-		// Annade los elementos al Frame
+		// Add the "main" elements to the frame
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(imageView, BorderLayout.CENTER);
 		this.add(southPanel, BorderLayout.SOUTH);
@@ -200,7 +212,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	}
 
     /**
-     * Check for actions on a specific event
+     * Check for actions on a specific event (timer or button events)
      */
 	@Override public void actionPerformed(ActionEvent event)
 	{
@@ -215,52 +227,84 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
       {
     	  if (this.state == buttonState.SIGUIENTE)
     	  {
-    		  this.state = buttonState.INICIAR;
-    		  try {
-  				this.mascara.setMask(characters.getMask());
-  				} catch (ParseException e) {}
-  			  this.text = new JFormattedTextField(this.mascara);
-    		  this.changeImageButton.setText("Iniciar");
-    		  this.imageView.setIcon(null);
-    		  this.timerView.setText(null);
-    		  characters.levelGoToNext();
-    		  
+    		  this.updateLevel();
     	  }   		  
     	  else if(this.state == buttonState.INICIAR)
     	  {
-    		  this.updateLevel();
-    		  try {
-    				this.mascara.setMask(characters.getMask());
-    				} catch (ParseException e) {}
-    		  this.elapsedTime.start();
-    		  this.state = buttonState.ME_RINDO;
-    		  this.changeImageButton.setText("Me rindo");
-
+    		  this.startLevel();
     	  }
     	  else
     	  {
-    		  this.state = buttonState.SIGUIENTE;
-    		  this.changeImageButton.setText("Siguiente");
-    		  this.elapsedTime.stop();
+    		  this.stopLevel();
     	  }
       }
    }
 	
 	/**
-	 * Updated level counter on object characters and goes to the next level.
-	 * Updates picture
-	 * Updates seconds
-	 * Updates level name
+	 * Updates button and resets the image and timer
 	 */
 	public void updateLevel()
 	{
+		  this.state = buttonState.INICIAR;
+		  this.changeImageButton.setText("Iniciar");
+		  
+		  // Resets the image and the timer
+		  this.imageView.setIcon(null);
+		  this.timerView.setText(null);
+		  // Update the level view
+		  currentLevel++;
+		  levelAndScoreView.setText( String.format("LEVEL %d - SCORE %d", currentLevel, score ));
 
-		
-		currentLevelView.setText( characters.getCurrentLevel() );
-		this.imageView.setIcon(this.characters.getImage());
-		elapsedSeconds = characters.getSeconds();
+	}
+	
+	
+	/**
+	 * Updates text field, button, image and starts the timer
+	 */
+	public void startLevel()
+	{
+		// This is necessary to accomplish the mask setting
+		  try {
+				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
+				} catch (ParseException e) {} 
+		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
+		  this.text.setFormatterFactory(factory);
+		  
+		  // Show the level info. (useful for the first level)
+		  levelAndScoreView.setText( String.format("LEVEL %d - SCORE %d", currentLevel, score ));
+		  // Ask for the image to the character class
+		  this.imageView.setIcon(this.characters.getImage( currentLevel ));
+		  // Update the timer
+		  elapsedSeconds = characters.getSeconds( currentLevel );
+		  this.elapsedTime.start();
+		  // Update the button
+		  this.state = buttonState.ME_RINDO;
+		  this.changeImageButton.setText("Me rindo");
+
+	}
+	
+	/**
+	 * Stops the timer and reset the text field
+	 */
+	public void stopLevel()
+	{
+		  // The current level is stopped, get to the next
+		  this.state = buttonState.SIGUIENTE;
+		  this.changeImageButton.setText("Siguiente");
+		  this.elapsedTime.stop();
+		  
+		  // This is necessary to accomplish the mask setting
+		  try {
+				this.mask.setMask(characters.getMaskFormat( currentLevel ));				
+				} catch (ParseException e) {}  
+		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
+		  this.text.setFormatterFactory(factory);
+
 	}
  
+	/**
+	 * Updates the timer to get an animation
+	 */
    private void updateElapsedTime()
    {
 		//Subtract from elapsed seconds because counter goes backwards
@@ -283,27 +327,39 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 
 
 	@Override
+	/**
+	 * This event is used to recognize the ENTER key press to match the name given by the user
+	 */
 	public void keyPressed(KeyEvent keyEvent) {
 		
 		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
         {
-            System.out.println(this.text.getText());
+			// If the name matches with the correct character name, advice to the user
+			// and update the hints counter, otherwise, show the mistake
+            if(this.text.getText().equals(this.characters.getName( currentLevel )))
+            {
+            	System.out.println("ACERTÓ");
+            	levelAndScoreView.setText(String.format("LEVEL %d - SCORE %d", currentLevel, ++score));
+            	this.stopLevel();
+            	
+            }
+            else
+            {
+            	System.out.println("NOMBRE EQUIVOCADO");
+            	this.stopLevel();
+            }
         }
 		
 	}
 
-	
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 	
-
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub	
 	}
 	
 
