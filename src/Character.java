@@ -45,7 +45,7 @@ public class Character {
 		// Necessary to read the document without errors
 		try
 		{
-			URL url = this.getClass().getResource("/resources/Character_list.txt");
+			URL url = this.getClass().getResource("Character_list.txt");
 
 			try {
 				File file = new File(url.toURI());
@@ -70,7 +70,7 @@ public class Character {
             	//Read the names and stores name and image route
             	String name = input.nextLine();
             	names[index] = name.replaceAll("_", " ");
-            	images[index] = new ImageIcon(this.getClass().getResource("/resources/" + name + ".png"));
+            	images[index] = new ImageIcon(this.getClass().getResource(name + ".png"));
                 
                 //Read seconds before particular character shoots
                 long second = input.nextLong();
