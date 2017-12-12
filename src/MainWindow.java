@@ -317,9 +317,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		if (this.elapsedSeconds == 0)
 		{
 			  this.timerView.setText("Se acabó el tiempo");
-			  this.elapsedTime.stop();
-			  this.state = buttonState.SIGUIENTE;
-			  this.changeImageButton.setText("Siguiente");
+			  this.stopLevel();
 		}
 		else
 			this.timerView.setText(text);
