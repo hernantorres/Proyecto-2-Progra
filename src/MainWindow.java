@@ -294,9 +294,14 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  try {
 				this.mask.setMask(characters.getMaskFormat( currentLevel ));				
 				} catch (ParseException e) {}  
-		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
+		  
+		  // This closes the text field to avoid entrances
+		  MaskFormatter empty = null;
+			try {
+				empty = new MaskFormatter("");
+			} catch (ParseException e) {}
+		  DefaultFormatterFactory factory = new DefaultFormatterFactory(empty);
 		  this.text.setFormatterFactory(factory);
-
 	}
  
 	/**
