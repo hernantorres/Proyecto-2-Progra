@@ -54,9 +54,6 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	//With cross multiplication we get the width relative to the windowHeight just obtained
 	private int windowWidth = ( windowHeight * desiredWidthRatio ) / desiredHeightRatio;
 	// </Valores para la ventana>
-
-	//default textLength
-	private static int textLength = 30;
 	
 	//default game name
 	private static String gameName = "Finite Sentence Machine";
