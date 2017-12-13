@@ -23,6 +23,9 @@ public class Character {
 	 */
 	private long[] seconds;
 	
+	/** Array of the own character score */
+	private long[] maximunScores;
+	
 	/** 
 	 * The scanner object used to read the txt file
 	 */
@@ -35,6 +38,8 @@ public class Character {
 	{
 		loadCharacters();
 	}
+	
+	
 	
 	/**
 	 * Load characters from a text file in the assets folder. Read link
@@ -60,6 +65,7 @@ public class Character {
             images = new ImageIcon[arrayLength];
             names = new String[arrayLength];
             seconds = new long[arrayLength];
+            maximunScores = new long[arrayLength];
             
             //Next line so me can use the scanner correctly
             input.nextLine();
@@ -75,8 +81,11 @@ public class Character {
                 //Read seconds before particular character shoots
                 long second = input.nextLong();
                 seconds[index] = second;
-                input.nextLine();
                 
+                maximunScores[index] = 100;
+
+                input.nextLine();
+           
             }
             input.close();
         }
@@ -115,6 +124,15 @@ public class Character {
 	{
 		// TODO Auto-generated method stub
 		return names[index - 1];
+	}
+	
+	/**
+	 * Get maximun score of the index character
+	 * @return long the maximun scores
+	 */
+	public long getScore(int index)
+	{
+		return maximunScores[index -1];
 	}
 	
 	/**

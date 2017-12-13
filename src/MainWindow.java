@@ -8,11 +8,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.text.ParseException;
 
 import javax.swing.Timer;
@@ -69,7 +71,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	private JLabel imageView;
    	
    	// El label del nivel
-   	private JLabel levelAndScoreView;
+   	private JLabel scoreView;
    	
    	// El boton para cambiar de imagen (provisional)
    	private JButton changeImageButton;
@@ -90,17 +92,23 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	private JPanel southPanel;
    	
    	// The current level number
-   	private int currentLevel = 1;
+   	private int currentLevel = 0;
    	
    	// The number of hits of the player
    	private int score = 0;
+   	
+   	private Graphics graphic = null;
+   	
+   	private BufferedImage hint = null;
+   	
+   	private BufferedImage fail = null; 
    	
    	/**
 	 * An enum to recognize the state of the game in order to make actions.
 	 * This is mostly important for the JButton 
 	 */
    	public enum buttonState{
-   		ME_RINDO, SIGUIENTE, INICIAR
+   		LISTO, ME_RINDO, SIGUIENTE, INICIAR
    	}
    	
    	// The "current" enum used by the game
@@ -168,16 +176,15 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		
 		// Level view management
 		//Gets the current level name
-		this.levelAndScoreView = new JLabel( String.format("LEVEL %d - SCORE %d", currentLevel, score) );
+		this.scoreView = new JLabel( String.format("SCORE %d", score) );
 		//sets font
 		Font font = new Font("Courier New", Font.ITALIC, 20);
-		this.levelAndScoreView.setFont( font );
+		this.scoreView.setFont( font );
 		//Aligns to the center
-		this.levelAndScoreView.setHorizontalAlignment(JLabel.CENTER);
-		this.levelAndScoreView.setText("USA EL BOTON PARA INICIAR");
+		this.scoreView.setHorizontalAlignment(JLabel.CENTER);
 
 		// JButton management
-		this.changeImageButton = new JButton("Iniciar");
+		this.changeImageButton = new JButton("INICIAR");
 		this.changeImageButton.addActionListener(this);
 		
 		// JFormattedTextField management
@@ -197,10 +204,27 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		this.northPanel = new JPanel( new GridLayout(1,2));
 		this.timerView.setHorizontalAlignment(JLabel.CENTER);
 		this.timerView.setFont ( font );
-		this.northPanel.add(levelAndScoreView);
+		this.northPanel.add(scoreView);
 		this.northPanel.add(timerView);
+		this.imageView.setFont(font);
+		this.imageView.setText("Presiona el boton INICIAR para jugar");
 		
-
+		try
+        {
+           this.hint = ImageIO.read( this.getClass().getResource("DEADPOOL.png") );
+        }
+        catch ( IOException exception )
+        {
+        }
+		
+		try
+        {
+           this.fail = ImageIO.read( this.getClass().getResource("DEADPOOL.png") );
+        }
+        catch ( IOException exception )
+        {
+        }
+		
 		// Add the "main" elements to the frame
 		this.add(northPanel, BorderLayout.NORTH);
 		this.add(imageView, BorderLayout.CENTER);
@@ -222,11 +246,13 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
       // Si es un evento del button
       if ( event.getSource() == this.changeImageButton )
       {
-    	  if (this.state == buttonState.SIGUIENTE)
+    	  if (this.state == buttonState.SIGUIENTE || this.state == buttonState.INICIAR)
     	  {
+    		  this.imageView.setText(null);
     		  this.updateLevel();
+    		  this.imageView.setText("Presiona el boton LISTO para iniciar esta ronda");
     	  }   		  
-    	  else if(this.state == buttonState.INICIAR)
+    	  else if(this.state == buttonState.LISTO)
     	  {
     		  this.startLevel();
     	  }
@@ -242,16 +268,21 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void updateLevel()
 	{
-		  this.state = buttonState.INICIAR;
-		  this.changeImageButton.setText("Iniciar");
+		  this.state = buttonState.LISTO;
+		  this.changeImageButton.setText("LISTO!");
 		  
 		  // Resets the image and the timer
 		  this.imageView.setIcon(null);
 		  this.timerView.setText(null);
 		  // Update the level view
 		  currentLevel++;
-		  levelAndScoreView.setText( String.format("LEVEL %d - SCORE %d", currentLevel, score ));
-
+		  scoreView.setText( String.format("SCORE %d", score ));
+		  try {
+				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
+				} catch (ParseException e) {} 
+		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
+		  this.text.setFormatterFactory(factory);
+		  this.text.setEditable(false);
 	}
 	
 	
@@ -260,6 +291,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void startLevel()
 	{
+		this.imageView.setText(null);
 		// This is necessary to accomplish the mask setting
 		  try {
 				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
@@ -267,8 +299,11 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
 		  this.text.setFormatterFactory(factory);
 		  
+		  this.text.setEditable(true);
+		  this.text.requestFocus();
+		  
 		  // Show the level info. (useful for the first level)
-		  levelAndScoreView.setText( String.format("LEVEL %d - SCORE %d", currentLevel, score ));
+		  scoreView.setText( String.format("SCORE %d", score ));
 		  // Ask for the image to the character class
 		  this.imageView.setIcon(this.characters.getImage( currentLevel ));
 		  // Update the timer
@@ -276,7 +311,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  this.elapsedTime.start();
 		  // Update the button
 		  this.state = buttonState.ME_RINDO;
-		  this.changeImageButton.setText("Me rindo");
+		  this.changeImageButton.setText("ME RINDO");
 
 	}
 	
@@ -287,20 +322,14 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	{
 		  // The current level is stopped, get to the next
 		  this.state = buttonState.SIGUIENTE;
-		  this.changeImageButton.setText("Siguiente");
+		  this.changeImageButton.setText("SIGUIENTE");
 		  this.elapsedTime.stop();
 		  
-		  // This is necessary to accomplish the mask setting
+		  this.text.setEditable(false);
 		  try {
-				this.mask.setMask(characters.getMaskFormat( currentLevel ));				
-				} catch (ParseException e) {}  
-		  
-		  // This closes the text field to avoid entrances
-		  MaskFormatter empty = null;
-			try {
-				empty = new MaskFormatter("");
-			} catch (ParseException e) {}
-		  DefaultFormatterFactory factory = new DefaultFormatterFactory(empty);
+				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
+				} catch (ParseException e) {} 
+		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
 		  this.text.setFormatterFactory(factory);
 	}
  
@@ -338,13 +367,21 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 			// and update the hints counter, otherwise, show the mistake
             if(this.text.getText().equals(this.characters.getName( currentLevel )))
             {
+            	 
+            	 
+            	this.graphic = this.getGraphics();
+            	graphic.drawImage(hint, 200, 200, null);
+            	
             	System.out.println("ACERTÓ");
-            	levelAndScoreView.setText(String.format("LEVEL %d - SCORE %d", currentLevel, ++score));
+            	scoreView.setText(String.format("SCORE %d", ++score));
             	this.stopLevel();
             	
             }
             else
             {
+            	this.graphic = this.getGraphics();
+            	graphic.drawImage(fail, 200, 200, null);
+            	
             	System.out.println("NOMBRE EQUIVOCADO");
             	this.stopLevel();
             }
