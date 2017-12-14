@@ -30,7 +30,7 @@ Abajo hay otra ventana donde el jugador puede escribir el nombre de su contrinca
 
 Justo abajo de la imagen, el cronómetro en cuenta regresiva. Si el cronómetro llega a cero, el enemigo dispara. 
 
-Al costado, los turnos que ha sobrevivido el jugador.
+Al costado, los turnos que ha sobrevivido el jugador, cuantificados en puntos.
 
 
 Las imagenes estarán confinadas en un cuadrado, todas del mismo tamaño. 
