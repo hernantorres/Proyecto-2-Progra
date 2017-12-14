@@ -1,5 +1,10 @@
 import java.util.Arrays;
 
+/***
+ * This class was taken from the Hackerrank excercises made by Profe Jeisson,
+ * therefore, it can be trusted.
+ */
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with

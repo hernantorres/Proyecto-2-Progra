@@ -98,17 +98,30 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	// The number of hits of the player
    	private int score = 0;
    	
+   	//To write images on screen, specifically the "Correct" and "INcorrect" images
    	private Graphics graphic = null;
    	
+   	//Images of each of the signs for getting a word correct, failing it, and getting an in between score.
    	private BufferedImage hint = null;
-   	
-   	private BufferedImage fail = null; 
-
+   	private BufferedImage fail = null;
    	private BufferedImage okay = null; 
    	
+   	//For measuring how close an answer is to the true characters name
    	private LevenshteinDistance distance = new LevenshteinDistance();
    	
+   	//Boolean for considering when enter can have a meaning depending on the state of the button in the GUI(LISTO, ME_RINDO, 
+   	//SIGUIENTE, INICIAR)
    	private boolean canEvaluate = true;
+   	
+   	private String NEXT_LEVEL_PROMPT = "Presiona el boton LISTO para iniciar esta ronda";
+   	
+   	//The width used for the images. This is agreed upon between artists and programmers
+   	//The width and height is the same because the images and the game window are supposed to be squares,
+   	//hence 1:1 desired ratio
+   	private int IMAGE_WIDTH = 300;
+   	
+   	//Used to hopefully put the images of correct, fail, and okay in the center
+   	private int IMAGE_OFFSET = (windowWidth / 2) - (IMAGE_WIDTH / 2);
    	
    	/**
 	 * An enum to recognize the state of the game in order to make actions.
@@ -131,22 +144,24 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public MainWindow()
 	{
+		//Set size and close Op
 		super( gameName );
 		this.setSize( windowWidth, windowHeight);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		//put in the center
 		this.setLocation((int)(monitorWidth/2 - this.windowWidth/2), (int)(monitorHeight/2 - this.windowHeight/2) );
 		
+		//Create main layout
 		BorderLayout mainLayout = new BorderLayout();
 		this.setLayout(mainLayout);
 
-		// Muestra los elementos del frame
+		//Shows elements in frame
 		displayElements();
 		
-		
+		//Starting state
 		this.state = buttonState.INICIAR;
 		
-		// Inicia el temporizador
+		//Starts timer
 		this.elapsedTime = new Timer(1000, this);		
 	}
 	
@@ -158,7 +173,9 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     */
 	private void displayElements()
 	{
-		// This is necessary to set mask Formatted, also used on the rest of the code
+		// Using a Try-Catch is necessary to set mask Formatted, also used on the rest of the code
+		// What is a mask? A way of limiting the space of a JTextField, we can even set spaces in between
+		// This is normaly used for setting dates like so: ##/##/#### and ###-####
 		this.mask = null;
 		try
 		{
@@ -216,6 +233,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		this.imageView.setFont(font);
 		this.imageView.setText("Presiona el boton INICIAR para jugar");
 		
+		//A bunch of obligatory try-catches for the images to show after every answer
 		try
         {
            this.hint = ImageIO.read( this.getClass().getResource("AnsCorrect.png") );
@@ -252,29 +270,31 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
      */
 	@Override public void actionPerformed(ActionEvent event)
 	{
-	   // Si es un evento del timer
+	   // If Timer event
       if ( event.getSource() == this.elapsedTime )
       {
          this.updateElapsedTime();
       }
       
-      // Si es un evento del button
+      // If button event. If button is pressed do something depending on the current state
       if ( event.getSource() == this.changeImageButton )
       {
+    	  //State SIGUIENTE
     	  if (this.state == buttonState.SIGUIENTE || this.state == buttonState.INICIAR)
     	  {
     		  this.imageView.setText(null);
     		  this.updateLevel();
-    		  this.imageView.setText("Presiona el boton LISTO para iniciar esta ronda");
+    		  this.imageView.setText( NEXT_LEVEL_PROMPT );
     	  }   		  
+    	  //State LISTO!
     	  else if(this.state == buttonState.LISTO)
     	  {
     		  this.startLevel();
     	  }
-    	  else //el estado "ME RINDO"
+    	  else //state "ME RINDO"
     	  {
     		  this.graphic = this.getGraphics();
-          	  graphic.drawImage(fail, 200, 200, null);
+          	  graphic.drawImage(fail, IMAGE_OFFSET, IMAGE_OFFSET, null);
     		  this.subtractScore();
     		  this.text.setText("");
     		  this.stopLevel();
@@ -394,7 +414,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		{
 			  this.timerView.setText("Se acabó el tiempo");
 			  this.graphic = this.getGraphics();
-			  graphic.drawImage(fail, 200, 200, null);
+			  graphic.drawImage(fail, IMAGE_OFFSET, IMAGE_OFFSET, null);
 			  this.subtractScore();
 			  this.stopLevel();
 		}
@@ -414,17 +434,24 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 			// If the name matches with the correct character name, advice to the user
 			// and update the 'correct answers' counter, otherwise, show the mistake
             long difference = distance.apply(this.text.getText(), this.characters.getName( currentLevel ));
-			// If we got the word correct
+            //This canEvaluate variable makes sure that the ENTER key is not spamed in every level 
+            //and keep doing the checks for the key press below
             if( canEvaluate )
             {
+            	//Set the boolean false to prevent repeating checks in a single event
             	canEvaluate = false;
+            	//If we got the word correct
             	if(this.text.getText().equals(this.characters.getName( currentLevel )))
 	            {
-	            	this.graphic = this.getGraphics();
+	            	//Draw a green checkmark
+            		this.graphic = this.getGraphics();
 	            	graphic.drawImage(hint, 200, 200, null);
 	            	
+	            	//println for debugging
 	            	System.out.println("ACERTÓ");
+	            	//Sum the characters entire score to the total score.
 	            	score = (int) (score + characters.getScore( currentLevel ));
+	            	//Update text
 	            	scoreView.setText(String.format("SCORE %d", score ));
 	            	this.stopLevel();
 	            	
@@ -432,17 +459,26 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	            // If we didn't fail the word completely, we got at least a word right
 	            else if ( difference < this.characters.getLongestLevenshteinDistance( currentLevel ) )
 	            {
+	            	//Draw a curvy line indicating okay score. It's not the worst nor the best.
 	            	this.graphic = this.getGraphics();
 	            	graphic.drawImage(okay, 200, 200, null);
 	            	
 	            	System.out.println("CASI ACIERTA");
-	            	// The closest the answer, the closest the value of this variable to 1.
+	            	// The closest the answer, the closest the value of this variable (multiplier) to 1.
+	            	// multiplier gets the percentage of what the player got right, depending on the 
+	            	// longest Levenshtein distance
+	            	
+	            	// The reason we put a 1.0 is because levenshtein.apply returns the changes the string needs
+	            	// to reach the correct answer, and not the percentage of the correct answer. What we need
+	            	// here is percentage which is its inverse.
 	            	double multiplier = 1.0 - ( (double)(difference) / this.characters.getLongestLevenshteinDistance(currentLevel) );
+	            	// multiplier alters the characters score in a range of 0 to 100%
+	            	score = (int) (score + (characters.getScore( currentLevel ) * multiplier));
+	            	scoreView.setText(String.format("SCORE %d", score ));
+	            	//Debugging prints
 	            	System.out.printf("This rounds lehvenstein max is %d%n", this.characters.getLongestLevenshteinDistance( currentLevel ));
 	            	System.out.printf("Your distance is %d%n", difference);
 	            	System.out.printf("This rounds multiplier is %f%n", multiplier);
-	            	score = (int) (score + (characters.getScore( currentLevel ) * multiplier));
-	            	scoreView.setText(String.format("SCORE %d", score ));
 	            	this.stopLevel();
 	            }
 	            // The word was guessed incorrectly
