@@ -108,6 +108,8 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	
    	private LevenshteinDistance distance = new LevenshteinDistance();
    	
+   	private boolean canEvaluate = true;
+   	
    	/**
 	 * An enum to recognize the state of the game in order to make actions.
 	 * This is mostly important for the JButton 
@@ -319,6 +321,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void startLevel()
 	{
+		canEvaluate = true;
 		this.imageView.setText(null);
 		// This is necessary to accomplish the mask setting
 		  try {
@@ -349,7 +352,8 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void stopLevel()
 	{
-		  // The current level is stopped, get to the next
+		canEvaluate = false;  
+		// The current level is stopped, get to the next
 		  this.state = buttonState.SIGUIENTE;
 		  this.changeImageButton.setText("SIGUIENTE");
 		  this.elapsedTime.stop();
@@ -400,43 +404,47 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 			// and update the 'correct answers' counter, otherwise, show the mistake
             long difference = distance.apply(this.text.getText(), this.characters.getName( currentLevel ));
 			// If we got the word correct
-            if(this.text.getText().equals(this.characters.getName( currentLevel )))
+            if( canEvaluate )
             {
-            	this.graphic = this.getGraphics();
-            	graphic.drawImage(hint, 200, 200, null);
-            	
-            	System.out.println("ACERTÓ");
-            	score = (int) (score + characters.getScore( currentLevel ));
-            	scoreView.setText(String.format("SCORE %d", score ));
-            	this.stopLevel();
-            	
-            }
-            // If we didn't fail the word completely, we got at least a word right
-            else if ( difference < this.characters.getLongestLevenshteinDistance( currentLevel ) )
-            {
-            	this.graphic = this.getGraphics();
-            	graphic.drawImage(okay, 200, 200, null);
-            	
-            	System.out.println("CASI ACIERTA");
-            	// The closest the answer, the closest the value of this variable to 1.
-            	double multiplier = 1.0 - ( (double)(difference) / this.characters.getLongestLevenshteinDistance(currentLevel) );
-            	System.out.printf("This rounds lehvenstein max is %d%n", this.characters.getLongestLevenshteinDistance( currentLevel ));
-            	System.out.printf("Your distance is %d%n", difference);
-            	System.out.printf("This rounds multiplier is %f%n", multiplier);
-            	score = (int) (score + (characters.getScore( currentLevel ) * multiplier));
-            	scoreView.setText(String.format("SCORE %d", score ));
-            	this.stopLevel();
-            }
-            // The word was guessed incorrectly
-            else
-            {
-            	this.graphic = this.getGraphics();
-            	graphic.drawImage(fail, 200, 200, null);
-            	
-            	System.out.println("FALLO");
-            	this.subtractScore();
-            	this.stopLevel();
-            }
+            	canEvaluate = false;
+            	if(this.text.getText().equals(this.characters.getName( currentLevel )))
+	            {
+	            	this.graphic = this.getGraphics();
+	            	graphic.drawImage(hint, 200, 200, null);
+	            	
+	            	System.out.println("ACERTÓ");
+	            	score = (int) (score + characters.getScore( currentLevel ));
+	            	scoreView.setText(String.format("SCORE %d", score ));
+	            	this.stopLevel();
+	            	
+	            }
+	            // If we didn't fail the word completely, we got at least a word right
+	            else if ( difference < this.characters.getLongestLevenshteinDistance( currentLevel ) )
+	            {
+	            	this.graphic = this.getGraphics();
+	            	graphic.drawImage(okay, 200, 200, null);
+	            	
+	            	System.out.println("CASI ACIERTA");
+	            	// The closest the answer, the closest the value of this variable to 1.
+	            	double multiplier = 1.0 - ( (double)(difference) / this.characters.getLongestLevenshteinDistance(currentLevel) );
+	            	System.out.printf("This rounds lehvenstein max is %d%n", this.characters.getLongestLevenshteinDistance( currentLevel ));
+	            	System.out.printf("Your distance is %d%n", difference);
+	            	System.out.printf("This rounds multiplier is %f%n", multiplier);
+	            	score = (int) (score + (characters.getScore( currentLevel ) * multiplier));
+	            	scoreView.setText(String.format("SCORE %d", score ));
+	            	this.stopLevel();
+	            }
+	            // The word was guessed incorrectly
+	            else
+	            {
+	            	this.graphic = this.getGraphics();
+	            	graphic.drawImage(fail, 200, 200, null);
+	            	
+	            	System.out.println("FALLO");
+	            	this.subtractScore();
+	            	this.stopLevel();
+	            }
+        	}
         }
 		
 	}
