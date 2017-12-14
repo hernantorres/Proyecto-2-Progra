@@ -123,6 +123,10 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	//Used to hopefully put the images of correct, fail, and okay in the center
    	private int IMAGE_OFFSET = (windowWidth / 2) - (IMAGE_WIDTH / 2);
    	
+   	private int BONUS_POINTS = 50;
+   	
+   	private int MIN_PUNISH_SCORE = 700;
+   	
    	/**
 	 * An enum to recognize the state of the game in order to make actions.
 	 * This is mostly important for the JButton 
@@ -306,7 +310,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		// This min() ensures that characters with a high score (example: Rorshach gives over 1600 points)
 		// aren't too damaging for the general score of the player. With this, failing Rorshach will not
 		// subtract 1600 points, but 300.
-    	long toSubtract = Math.min(500, characters.getScore( currentLevel ));
+    	long toSubtract = Math.min(MIN_PUNISH_SCORE, characters.getScore( currentLevel ));
 		score = (int) (score - toSubtract);
     	scoreView.setText(String.format("SCORE %d", score ));
 	}
@@ -453,7 +457,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	            	score = (int) (score + characters.getScore( currentLevel ));
 	            	
 	            	//Beta feature: give bonus points for extra points
-	            	score = (int) (score + (elapsedSeconds*100));
+	            	score = (int) (score + (elapsedSeconds*BONUS_POINTS));
 	            	
 	            	//Update text
 	            	scoreView.setText(String.format("SCORE %d", score ));
