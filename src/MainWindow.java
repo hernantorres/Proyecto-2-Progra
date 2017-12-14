@@ -451,6 +451,10 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	            	System.out.println("ACERTÓ");
 	            	//Sum the characters entire score to the total score.
 	            	score = (int) (score + characters.getScore( currentLevel ));
+	            	
+	            	//Beta feature: give bonus points for extra points
+	            	score = (int) (score + (elapsedSeconds*100));
+	            	
 	            	//Update text
 	            	scoreView.setText(String.format("SCORE %d", score ));
 	            	this.stopLevel();
@@ -461,7 +465,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	            {
 	            	//Draw a curvy line indicating okay score. It's not the worst nor the best.
 	            	this.graphic = this.getGraphics();
-	            	graphic.drawImage(okay, 200, 200, null);
+	            	graphic.drawImage(okay, IMAGE_OFFSET, IMAGE_OFFSET, null);
 	            	
 	            	System.out.println("CASI ACIERTA");
 	            	// The closest the answer, the closest the value of this variable (multiplier) to 1.
