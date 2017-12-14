@@ -181,4 +181,11 @@ public class Character {
 		return dist;
 	}
 
+
+
+	public int getArrayLength() {
+		// TODO Auto-generated method stub
+		return this.names.length;
+	}
+
 }

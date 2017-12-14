@@ -296,6 +296,17 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	 */
 	public void updateLevel()
 	{
+		if(currentLevel == characters.getArrayLength())
+		{
+			this.remove(northPanel);
+			this.remove(southPanel);
+			this.remove(imageView);
+			JLabel end = new JLabel(String.format("Fin del juego, tu puntaje es: %d", this.score));
+			end.setHorizontalAlignment(JLabel.CENTER);
+			end.setFont(new Font("Courier New", Font.BOLD, 20));
+			this.add(end, BorderLayout.CENTER);
+
+		}
 		  this.state = buttonState.LISTO;
 		  this.changeImageButton.setText("LISTO!");
 		  
