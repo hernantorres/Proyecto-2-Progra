@@ -102,6 +102,10 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
    	private BufferedImage hint = null;
    	
    	private BufferedImage fail = null; 
+
+   	private BufferedImage okay = null; 
+   	
+   	private LevenshteinDistance distance = new LevenshteinDistance();
    	
    	/**
 	 * An enum to recognize the state of the game in order to make actions.
@@ -211,7 +215,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		
 		try
         {
-           this.hint = ImageIO.read( this.getClass().getResource("DEADPOOL.png") );
+           this.hint = ImageIO.read( this.getClass().getResource("AnsCorrect.png") );
         }
         catch ( IOException exception )
         {
@@ -219,7 +223,15 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		
 		try
         {
-           this.fail = ImageIO.read( this.getClass().getResource("DEADPOOL.png") );
+           this.fail = ImageIO.read( this.getClass().getResource("AnsFail.png") );
+        }
+        catch ( IOException exception )
+        {
+        }
+		
+		try
+        {
+           this.okay = ImageIO.read( this.getClass().getResource("AnsOkay.png") );
         }
         catch ( IOException exception )
         {
@@ -256,13 +268,25 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     	  {
     		  this.startLevel();
     	  }
-    	  else
+    	  else //el estado "ME RINDO"
     	  {
+    		  this.graphic = this.getGraphics();
+          	  graphic.drawImage(fail, 200, 200, null);
+    		  this.subtractScore();
     		  this.stopLevel();
     	  }
       }
    }
 	
+	private void subtractScore() {
+		// This min() ensures that characters with a high score (example: Rorshach gives over 1600 points)
+		// aren't too damaging for the general score of the player. With this, failing Rorshach will not
+		// subtract 1600 points, but 300.
+    	long toSubtract = Math.min(500, characters.getScore( currentLevel ));
+		score = (int) (score - toSubtract);
+    	scoreView.setText(String.format("SCORE %d", score ));
+	}
+
 	/**
 	 * Updates button and resets the image and timer
 	 */
@@ -276,6 +300,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  this.timerView.setText(null);
 		  // Update the level view
 		  currentLevel++;
+		  
 		  scoreView.setText( String.format("SCORE %d", score ));
 		  try {
 				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
@@ -348,6 +373,9 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		if (this.elapsedSeconds == 0)
 		{
 			  this.timerView.setText("Se acabó el tiempo");
+			  this.graphic = this.getGraphics();
+			  graphic.drawImage(fail, 200, 200, null);
+			  this.subtractScore();
 			  this.stopLevel();
 		}
 		else
@@ -364,25 +392,44 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER)
         {
 			// If the name matches with the correct character name, advice to the user
-			// and update the hints counter, otherwise, show the mistake
+			// and update the 'correct answers' counter, otherwise, show the mistake
+            long difference = distance.apply(this.text.getText(), this.characters.getName( currentLevel ));
+			// If we got the word correct
             if(this.text.getText().equals(this.characters.getName( currentLevel )))
             {
-            	 
-            	 
             	this.graphic = this.getGraphics();
             	graphic.drawImage(hint, 200, 200, null);
             	
             	System.out.println("ACERTÓ");
-            	scoreView.setText(String.format("SCORE %d", ++score));
+            	score = (int) (score + characters.getScore( currentLevel ));
+            	scoreView.setText(String.format("SCORE %d", score ));
             	this.stopLevel();
             	
             }
+            // If we didn't fail the word completely, we got at least a word right
+            else if ( difference < this.characters.getLongestLevenshteinDistance( currentLevel ) )
+            {
+            	this.graphic = this.getGraphics();
+            	graphic.drawImage(okay, 200, 200, null);
+            	
+            	System.out.println("CASI ACIERTA");
+            	// The closest the answer, the closest the value of this variable to 1.
+            	double multiplier = 1.0 - ( (double)(difference) / this.characters.getLongestLevenshteinDistance(currentLevel) );
+            	System.out.printf("This rounds lehvenstein max is %d%n", this.characters.getLongestLevenshteinDistance( currentLevel ));
+            	System.out.printf("Your distance is %d%n", difference);
+            	System.out.printf("This rounds multiplier is %f%n", multiplier);
+            	score = (int) (score + (characters.getScore( currentLevel ) * multiplier));
+            	scoreView.setText(String.format("SCORE %d", score ));
+            	this.stopLevel();
+            }
+            // The word was guessed incorrectly
             else
             {
             	this.graphic = this.getGraphics();
             	graphic.drawImage(fail, 200, 200, null);
             	
-            	System.out.println("NOMBRE EQUIVOCADO");
+            	System.out.println("FALLO");
+            	this.subtractScore();
             	this.stopLevel();
             }
         }

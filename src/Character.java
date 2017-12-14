@@ -31,6 +31,8 @@ public class Character {
 	 */
 	private Scanner input;
 	
+	private LevenshteinDistance distance = new LevenshteinDistance();
+	
 	/**
 	 * Constructor for loading characters
 	 */
@@ -82,7 +84,8 @@ public class Character {
                 long second = input.nextLong();
                 seconds[index] = second;
                 
-                maximunScores[index] = 100;
+                long score = input.nextLong();
+                maximunScores[index] = score;
 
                 input.nextLine();
            
@@ -158,6 +161,18 @@ public class Character {
 		// Remove the first whitespace
 		mask = mask.substring(1);
 		return mask;
+	}
+
+
+	/***
+	 * Compare current name with empty string to return 'wrongest' answer possible
+	 * @param currentLevel
+	 * @return The longest distance possible from the current character name string.
+	 */
+	public long getLongestLevenshteinDistance(int currentLevel)
+	{
+		long dist = distance.apply(this.getName(currentLevel), this.getMaskFormat(currentLevel));
+		return dist;
 	}
 
 }
