@@ -69,6 +69,8 @@ public class Character {
             seconds = new long[arrayLength];
             maximunScores = new long[arrayLength];
             
+            System.out.println("arrayLength: " + arrayLength);
+            
             //Next line so me can use the scanner correctly
             input.nextLine();
             
@@ -86,7 +88,11 @@ public class Character {
                 
                 long score = input.nextLong();
                 maximunScores[index] = score;
-
+                
+                System.out.println("name: " + names[index]);
+                System.out.println("second: " + seconds[index]);
+                System.out.println("score: " + maximunScores[index]);
+                
                 input.nextLine();
            
             }

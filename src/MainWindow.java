@@ -5,6 +5,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JPanel;
 import java.awt.Font;
@@ -273,6 +274,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
     		  this.graphic = this.getGraphics();
           	  graphic.drawImage(fail, 200, 200, null);
     		  this.subtractScore();
+    		  this.text.setText("");
     		  this.stopLevel();
     	  }
       }
@@ -308,6 +310,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  DefaultFormatterFactory factory = new DefaultFormatterFactory(this.mask);
 		  this.text.setFormatterFactory(factory);
 		  this.text.setEditable(false);
+		  this.text.setBackground(Color.RED);
 	}
 	
 	
@@ -325,6 +328,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  this.text.setFormatterFactory(factory);
 		  
 		  this.text.setEditable(true);
+		  this.text.setBackground(Color.WHITE);
 		  this.text.requestFocus();
 		  
 		  // Show the level info. (useful for the first level)
@@ -351,6 +355,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		  this.elapsedTime.stop();
 		  
 		  this.text.setEditable(false);
+		  this.text.setBackground(Color.RED);
 		  try {
 				this.mask.setMask(characters.getMaskFormat( currentLevel ));			
 				} catch (ParseException e) {} 
