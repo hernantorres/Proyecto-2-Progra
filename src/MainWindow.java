@@ -240,7 +240,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		//A bunch of obligatory try-catches for the images to show after every answer
 		try
         {
-           this.hint = ImageIO.read( this.getClass().getResource("AnsCorrect.png") );
+           this.hint = ImageIO.read( this.getClass().getResource("AnsCorrect.PNG") );
         }
         catch ( IOException exception )
         {
@@ -248,7 +248,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		
 		try
         {
-           this.fail = ImageIO.read( this.getClass().getResource("AnsFail.png") );
+           this.fail = ImageIO.read( this.getClass().getResource("AnsFail.PNG") );
         }
         catch ( IOException exception )
         {
@@ -256,7 +256,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 		
 		try
         {
-           this.okay = ImageIO.read( this.getClass().getResource("AnsOkay.png") );
+           this.okay = ImageIO.read( this.getClass().getResource("AnsOkay.PNG") );
         }
         catch ( IOException exception )
         {
@@ -416,7 +416,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	   String text = String.format("%02d", seconds);
 		if (this.elapsedSeconds == 0)
 		{
-			  this.timerView.setText("Se acabó el tiempo");
+			  this.timerView.setText("Se acabï¿½ el tiempo");
 			  this.graphic = this.getGraphics();
 			  graphic.drawImage(fail, IMAGE_OFFSET, IMAGE_OFFSET, null);
 			  this.subtractScore();
@@ -452,7 +452,7 @@ public class MainWindow extends JFrame implements ActionListener, KeyListener
 	            	graphic.drawImage(hint, 200, 200, null);
 	            	
 	            	//println for debugging
-	            	System.out.println("ACERTÓ");
+	            	System.out.println("ACERTï¿½");
 	            	//Sum the characters entire score to the total score.
 	            	score = (int) (score + characters.getScore( currentLevel ));
 	            	
